@@ -87,14 +87,26 @@
                 src="https://d3lfzbr90tctqz.cloudfront.net/epi/resource/r/d/fecb5357708d4c28143fbb1ba2ad0701ce1c6b9eb99b1eb13ee84fc9b6cd9645"
                 alt="">
             </div>
-            <div class=" pl-2 mt-4 ">
+            
+           
+
+
+            <div id="coloresStock" class="d-flex justify-content-center mt-2"> Productos en stock :<span id="stock" > <%= producto.stock %> </span></div>
+           <div class="d-flex justify-content-center mt-2"> <span id="faltaStock" style="color : red;" class="ocultar"  >¡Stock insufuciente!</span></div>
+            <div class=" pl-2 mt-2 ">
             <label  for="">Cantidad</label>
 
-            <select  name="qty" id="">
+            <select  name="qty" id="qty">
               <option value="1">1</option>
               <option value="2">2</option>
               <option value="3">3</option>
               <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8">8</option>
+              <option value="9">9</option>
+              <option value="10">10</option>
             </select>
           </div>
            
@@ -198,7 +210,7 @@
 
 
 
-<!-- <script src="/javascripts/cantidadCarrito.js"></script> -->
+<script src="/javascripts/cantidadCarrito.js"></script>
 <%- include('../partials/footerPrueba') %>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"
   integrity="sha512-XtmMtDEcNz2j7ekrtHvOVR4iwwaD6o/FUJe6+Zq+HgcCsk3kj4uSQQR8weQ2QVj1o0Pk6PwYLohm206ZzNfubg=="

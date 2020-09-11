@@ -42,6 +42,9 @@ let cols = {
    },
    newprice : {
        type : dataTypes.INTEGER
+   },
+   stock : {
+       type : dataTypes.INTEGER
    }
 
 

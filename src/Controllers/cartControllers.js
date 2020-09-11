@@ -1,6 +1,6 @@
 const db = require('../../db/models')
 const { response } = require('express')
-var numero = []
+var numero = [1]
 var precioTotal = []
 const toThousand = n => n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 
@@ -17,7 +17,7 @@ let cartControllers = {
  home : function(req ,res){
 
     req.session.cantProdCarro =  noEliminados.length
-
+   
 
       var totalCarro = noEliminados.reduce(function (acum, precio) {
         return acum + precio.price
@@ -42,6 +42,8 @@ res.render('index/cart', {
 
  store : function(req, res) { 
 
+
+
    
 
    db.products.findAll({
@@ -50,6 +52,15 @@ res.render('index/cart', {
        }
    })
    .then(function(producto){
+
+    for(let negativo of producto){
+        var stockEnDb = negativo.stock
+    }
+
+    if(stockEnDb >= req.body.qty){
+        
+    
+    
 
   let prodDuplicados =   noEliminados.find(function(prodDupli){
         return prodDupli.id == req.body.idProducto
@@ -91,34 +102,50 @@ res.render('index/cart', {
         noEliminados.push(prod)
     })
 
-   /*  let duplicados =    noEliminados.findIndex(item => item.id == req.body.idProducto)
-console.log(duplicados)
-     */
+  
        
        
        res.redirect("/cart")
+
     } else {
 
  let duplicados = noEliminados.findIndex(item => item.id == req.body.idProducto)
 
- 
- 
- noEliminados[duplicados].cantidad = Number(noEliminados[duplicados].cantidad) + (Number(req.body.qty))
+ let productoDosVeces = noEliminados[duplicados]
 
- if( noEliminados[duplicados].offer == "on"){
-    noEliminados[duplicados].price =   noEliminados[duplicados].newprice * noEliminados[duplicados].cantidad
-    noEliminados[duplicados].precioOriginal = noEliminados[duplicados].newprice
+ if(productoDosVeces.stock >= Number(productoDosVeces.cantidad) + (Number(req.body.qty))){
+
+ 
+
+   
+ productoDosVeces.cantidad = Number(productoDosVeces.cantidad) + (Number(req.body.qty))
+ 
+ if( productoDosVeces.offer == "on"){
+    productoDosVeces.price =   productoDosVeces.newprice * productoDosVeces.cantidad
+    productoDosVeces.precioOriginal = productoDosVeces.newprice
 } else {
-    noEliminados[duplicados].price =   noEliminados[duplicados].price * noEliminados[duplicados].cantidad
-    noEliminados[duplicados].precioOriginal = noEliminados[duplicados].price
+    productoDosVeces.price =   productoDosVeces.price * productoDosVeces.cantidad
+    productoDosVeces.precioOriginal = productoDosVeces.price
 }
 
- console.log(noEliminados[duplicados].cantidad)
+
     
 
  res.redirect("/cart")
+}else {
+    
+    
+    res.redirect(`localhost:3000/products/detail/${req.body.idProducto}`)
+}
     }
-
+  
+    
+} else {
+    
+    /* res.render('products/productsDetail') */
+    
+        res.redirect(`localhost:3000/products/detail/${req.body.idProducto}`)
+    }
    })
   
  },
@@ -146,20 +173,21 @@ console.log(duplicados)
                     users_id: usuario.id,
                     total: precioFinal
                 })
-                db.carts.findOne({
+               /*  db.carts.findOne({
                     where : {
                         users_id: usuario.id
                     }
                 })
-                .then(function(carro){
+                .then(function(carro){ */
+                   /*  console.log("estoy en carro 1 aaaaaaaaaaaaaaaaaaaaaaaa")
                     for (let num of noEliminados){
                         db.products.findByPk(num.id)
                         .then(function(product){
                             carro.addProducts(product)
                         })
-                    }
+                    } */
                     res.redirect("/cart/payment")
-                })
+                /* }) */
 
 
             } else {
@@ -170,10 +198,13 @@ console.log(duplicados)
                     }
                 })
                 .then(function(carro){
+                    
                     for (let num of noEliminados){
                         
                         db.products.findByPk(num.id)                                              
                         .then(function(product){
+
+
                             if(product.id == num.id){
                                 var laCantidad = num.cantidad
                                 var oferta = num.offer
@@ -190,6 +221,16 @@ console.log(duplicados)
                                 qty : laCantidad
                             }})
                         })
+
+                        db.products.update({
+                            stock : (num.stock - num.cantidad)
+                        }, {
+                            where : {
+                                id : num.id
+
+                            }
+                        })
+
                     }
                     res.render('index/pagoExitoso')
                 })

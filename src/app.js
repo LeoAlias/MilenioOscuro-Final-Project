@@ -39,7 +39,7 @@ app.use('/', indexRouter);
 app.use('/products' , productsRouter)
 app.use('/users', usersRouter);
 app.use('/payment', creditCardRouter);
-app.use('/admin' , /* adminMiddleware , */ adminRouter)
+app.use('/admin' , adminMiddleware , adminRouter)
 app.use('/cart' , cartRouter )
 
 // catch 404 and forward to error handler

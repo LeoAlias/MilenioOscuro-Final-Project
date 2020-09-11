@@ -12,7 +12,7 @@ controllerIndex = {
   home: function (req, res, next) {
 
     console.log(req.session.cantProdCarro)
-
+    
     /* let prodsCategoriaX = products.filter(product => product.category == req.query.categoria) */
 
     let cat = req.query.categoria
